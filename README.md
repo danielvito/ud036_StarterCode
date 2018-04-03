@@ -11,9 +11,11 @@ Code is neatly formatted and follows the Python [PEP-8 Guidelines](http://pep8on
 # Installation and Usage
 In order to run this project you need python 3.x installed.
 
+```sh
 git clone https://github.com/danielvito/ud036_StarterCode.git
 cd ud036_StarterCode
 python entertainment_center.py
+```
 
 It will generate a static html file named fresh_tomatoes.html. This file will be opened on the default browser.
 
