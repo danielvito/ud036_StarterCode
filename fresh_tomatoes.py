@@ -9,7 +9,7 @@ main_page_head = '''
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Fresh Tomatoes!</title>
+    <title>Best movies ever!</title>
 
     <!-- Bootstrap 3 -->
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
@@ -34,6 +34,9 @@ main_page_head = '''
         #trailer-video {
             width: 100%;
             height: 100%;
+        }
+        #storyline-container {
+            padding: 5px;
         }
         .movie-tile {
             margin-bottom: 20px;
@@ -63,10 +66,12 @@ main_page_head = '''
             // Remove the src so the player itself gets removed, as this is the only
             // reliable way to ensure the video stops playing in IE
             $("#trailer-video-container").empty();
+            $("#storyline-container").empty();
         });
         // Start playing the video whenever the trailer modal is opened
         $(document).on('click', '.movie-tile', function (event) {
             var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
+            var storyline = $(this).attr('data-storyline')
             var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
             $("#trailer-video-container").empty().append($("<iframe></iframe>", {
               'id': 'trailer-video',
@@ -74,6 +79,7 @@ main_page_head = '''
               'src': sourceUrl,
               'frameborder': 0
             }));
+            $("#storyline-container").empty().append(storyline);
         });
         // Animate in the movies when the page loads
         $(document).ready(function () {
@@ -83,7 +89,7 @@ main_page_head = '''
         });
     </script>
 </head>
-'''
+'''  # NOQA
 
 
 # The main page layout and title bar
@@ -98,6 +104,7 @@ main_page_content = '''
           </a>
           <div class="scale-media" id="trailer-video-container">
           </div>
+          <div id="storyline-container"></div>
         </div>
       </div>
     </div>
@@ -107,7 +114,7 @@ main_page_content = '''
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Fresh Tomatoes Movie Trailers</a>
+            <a class="navbar-brand" href="#">Best movies ever according to IMDB.com</a>
           </div>
         </div>
       </div>
@@ -117,16 +124,18 @@ main_page_content = '''
     </div>
   </body>
 </html>
-'''
+'''  # NOQA
 
 
 # A single movie entry html template
 movie_tile_content = '''
-<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-storyline="{storyline}" data-toggle="modal" data-target="#trailer">
+    <h3>Position: {position}&#176;</h3>
+    <h4 style="color:#666666;">IMDB Rating: {rating}</h4>
     <img src="{poster_image_url}" width="220" height="342">
-    <h2>{movie_title}</h2>
+    <h2>{movie_title} ({year})</h2>
 </div>
-'''
+'''   # NOQA
 
 
 def create_movie_tiles_content(movies):
@@ -145,7 +154,11 @@ def create_movie_tiles_content(movies):
         content += movie_tile_content.format(
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
-            trailer_youtube_id=trailer_youtube_id
+            trailer_youtube_id=trailer_youtube_id,
+            year=movie.year,
+            rating=movie.imdb_rating,
+            storyline=movie.storyline,
+            position=movie.position
         )
     return content
 
